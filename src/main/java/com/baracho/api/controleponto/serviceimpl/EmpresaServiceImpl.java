@@ -6,9 +6,11 @@ import com.baracho.api.controleponto.service.EmpresaServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class EmpresaServiceImpl implements EmpresaServices {
 
     private static final Logger log = LoggerFactory.getLogger(EmpresaServiceImpl.class);
