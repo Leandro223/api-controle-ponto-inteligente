@@ -30,6 +30,14 @@ public class FuncionarioController {
     public FuncionarioController() {
     }
 
+    /**
+     * Atualiza dados de um funcionario
+     * @param id
+     * @param funcionarioDto
+     * @param result
+     * @return ResponseEntity<Response<FuncionarioDto>>
+     * @throws NoSuchAlgorithmException
+     */
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Response<FuncionarioDto>> atualizar(@PathVariable("id") Long id, @Valid @RequestBody FuncionarioDto funcionarioDto, BindingResult result) throws NoSuchAlgorithmException{
