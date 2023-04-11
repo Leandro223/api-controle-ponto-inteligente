@@ -1,7 +1,9 @@
 package com.baracho.api.controleponto.controllers;
 
 import com.baracho.api.controleponto.dto.EmpresaDto;
+import com.baracho.api.controleponto.dto.FuncionarioDto;
 import com.baracho.api.controleponto.entities.Empresa;
+import com.baracho.api.controleponto.entities.Funcionario;
 import com.baracho.api.controleponto.response.Response;
 import com.baracho.api.controleponto.service.EmpresaServices;
 import org.slf4j.Logger;
@@ -10,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/empresas")
@@ -41,6 +45,31 @@ public class EmpresaController {
         response.setData(this.converterEmpresaEmpresaDto(empresa.get()));
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping(value = "/cnpj/funcionarios/{cnpj}")
+    public ResponseEntity<List<FuncionarioDto>> buscarFuncionariosPorCnpj(@PathVariable("cnpj") String cnpj) {
+        log.info("Buscando Funcionarios por CNPJ: {}", cnpj);
+        Optional<Empresa> empresa = this.empresaServices.buscarPorCnpj(cnpj);
+        if(!empresa.isPresent()){
+            log.info("Empresa não encontrada para o cnpj: {}", cnpj);
+            return ResponseEntity.badRequest().build();
+        }
+        List<FuncionarioDto> funcionarioDto = empresa.get().getFuncionarios().stream()
+                .map(this::conveterFuncionarioParaFuncionarioDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(funcionarioDto);
+    }
+
+    private FuncionarioDto conveterFuncionarioParaFuncionarioDto(Funcionario funcionario) {
+        FuncionarioDto funcionarioDto = new FuncionarioDto();
+        funcionarioDto.setId(funcionario.getId());
+        funcionarioDto.setNome(funcionario.getNome());
+        funcionarioDto.setCpf(funcionario.getCpf());
+        funcionarioDto.setEmail(funcionario.getEmail());
+        return funcionarioDto;
+    }
+
 
     /**
      * Popula um DTO com os dados de uma empresa
