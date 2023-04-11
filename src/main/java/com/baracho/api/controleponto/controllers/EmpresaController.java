@@ -65,7 +65,6 @@ public class EmpresaController {
         FuncionarioDto funcionarioDto = new FuncionarioDto();
         funcionarioDto.setId(funcionario.getId());
         funcionarioDto.setNome(funcionario.getNome());
-        funcionarioDto.setCpf(funcionario.getCpf());
         funcionarioDto.setEmail(funcionario.getEmail());
         return funcionarioDto;
     }

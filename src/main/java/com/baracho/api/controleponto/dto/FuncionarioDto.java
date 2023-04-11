@@ -4,7 +4,6 @@ public class FuncionarioDto {
 
     private Long id;
     private String nome;
-    private String cpf;
     private String email;
 
 
@@ -12,10 +11,9 @@ public class FuncionarioDto {
     public FuncionarioDto() {}
 
     // construtor com todos os campos
-    public FuncionarioDto(Long id, String nome, String cpf, String email) {
+    public FuncionarioDto(Long id, String nome, String email) {
         this.id = id;
         this.nome = nome;
-        this.cpf = cpf;
         this.email = email;
 
     }
@@ -35,14 +33,6 @@ public class FuncionarioDto {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public String getEmail() {
