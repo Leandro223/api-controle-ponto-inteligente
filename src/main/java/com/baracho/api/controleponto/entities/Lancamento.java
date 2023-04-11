@@ -3,9 +3,14 @@ package com.baracho.api.controleponto.entities;
 import com.baracho.api.controleponto.enums.TipoEnum;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Lancamento {
+@Entity
+@Table(name = "lancamento")
+public class Lancamento implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private Date data;
