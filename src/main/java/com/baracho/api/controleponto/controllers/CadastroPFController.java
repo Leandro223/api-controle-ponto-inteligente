@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cadatrar-pf")
+@RequestMapping("/api/cadastrar-pf")
 @CrossOrigin("*")
 public class CadastroPFController {
 
