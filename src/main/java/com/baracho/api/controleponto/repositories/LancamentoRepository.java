@@ -21,7 +21,7 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
       List<Lancamento> findByFuncionarioId(@Param("funcionarioId") Long funcionarioId);
 
-      Page<Lancamento> findByFuncionario(@Param("funcionarioId") Long funcionarioId, Pageable pageable);
+      Page<Lancamento> findByFuncionarioId(@Param("funcionarioId") Long funcionarioId, Pageable pageable);
 
       @Query("SELECT l FROM Lancamento l WHERE l.data BETWEEN :dataInicio AND :datafFim")
       List<Lancamento> buscarPorData(@Param("dataInicio")LocalDate dataInicio, @Param("dataFim")LocalDate dataFim);
