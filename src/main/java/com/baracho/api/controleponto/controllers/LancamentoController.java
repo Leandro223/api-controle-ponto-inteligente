@@ -1,6 +1,7 @@
 package com.baracho.api.controleponto.controllers;
 
 import com.baracho.api.controleponto.dto.LancamentoDto;
+import com.baracho.api.controleponto.entities.Funcionario;
 import com.baracho.api.controleponto.entities.Lancamento;
 import com.baracho.api.controleponto.response.Response;
 import com.baracho.api.controleponto.service.FuncionarioService;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -74,6 +77,23 @@ public class LancamentoController {
 
             return lancamentoDto;
 
+      }
+
+      /**
+       * Valida um funcionario, verificando se ele é existente e valido no sistema
+       * @param lancamentoDto
+       * @param result
+       */
+      private void validarFuncionario (LancamentoDto lancamentoDto, BindingResult result){
+            if(lancamentoDto.getFuncionarioId() == null){
+                  result.addError(new ObjectError("funcionario", "funcionario não informado"));
+                  return;
+            }
+            log.info("Validando funcionario id {}", lancamentoDto.getFuncionarioId());
+            Optional<Funcionario> funcionario = this.funcionarioService.buscarPorId(lancamentoDto.getFuncionarioId());
+            if(!funcionario.isPresent()){
+                  result.addError(new ObjectError("funcionario", "funcionario não encontrado. ID inexistente."));
+            }
       }
 
 }
