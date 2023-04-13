@@ -66,6 +66,33 @@ public class LancamentoController {
       }
 
       /**
+       * Atualiza um lancamento pelo seu respectivo lancamento
+       * @param id
+       * @param lancamentoDto
+       * @param result
+       * @return ResponseEntity<Response<LancamentoDto>>
+       * @throws ParseException
+       */
+      @PutMapping(value = "/{id}")
+      public ResponseEntity<Response<LancamentoDto>> atualizar(@PathVariable("id") Long id, @Valid @RequestBody LancamentoDto lancamentoDto, BindingResult result) throws ParseException {
+            log.debug("atualizar lancamento: {}", lancamentoDto.toString());
+            Response<LancamentoDto> response = new Response<LancamentoDto>();
+            validarFuncionario(lancamentoDto, result);
+            lancamentoDto.setId(Optional.of(id));
+            Lancamento lancamento = this.converterDtoParaLancamento(lancamentoDto, result);
+
+            if (result.hasErrors()){
+                  log.error("Erro validando lancamento: {}", result.getAllErrors());
+                  result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+                  return ResponseEntity.badRequest().body(response);
+            }
+
+            lancamento = this.lancamentoService.persistir(lancamento);
+            response.setData(this.converterLancamentoParaLancamentoDto(lancamento));
+            return ResponseEntity.ok(response);
+      }
+
+      /**
        * Retorna a listagem de lancamentos de um funcionario
        * @param funcionarioId
        * @param pag
