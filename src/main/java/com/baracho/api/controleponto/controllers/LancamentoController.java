@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -88,6 +90,60 @@ public class LancamentoController {
             response.setData(lancamentoDto);
 
             return ResponseEntity.ok(response);
+      }
+
+      /**
+       * Retorna um lancamento por ID.
+       * @param id
+       * @return ResponseEntity<Response<LancamentoDto>>
+       */
+      @GetMapping(value = "/{id}")
+      public ResponseEntity<Response<LancamentoDto>> listarPorId(@PathVariable("id") Long id){
+            log.info("Buscando lancamento por id: {}", id);
+            Response<LancamentoDto> response = new Response<LancamentoDto>();
+            Optional<Lancamento> lancamento = this.lancamentoService.buscarPorId(id);
+
+            if (!lancamento.isPresent()){
+                  log.info("Lancamento não encontrado para o id: {}", id);
+                  response.getErrors().add("lancamento não encontrado para o id: " + id);
+                  return ResponseEntity.badRequest().body(response);
+            }
+
+            response.setData(this.converterLancamentoParaLancamentoDto(lancamento.get()));
+            return ResponseEntity.ok(response);
+      }
+
+      /**
+       * Busca todos os lancamentos
+       * @return ResponseEntity<List<LancamentoDto>>
+       */
+      @GetMapping(value = "/todos")
+      public ResponseEntity<List<LancamentoDto>> listarTodos() {
+            log.info("Buscando todos os lancamentos");
+            List<Lancamento> lancamentos = this.lancamentoService.buscarTodos();
+            List<LancamentoDto> lancamentoDto = new ArrayList<LancamentoDto>();
+            lancamentos.forEach(lancamento -> lancamentoDto.add(this.converterLancamentoParaLancamentoDto(lancamento)));
+            return ResponseEntity.ok(lancamentoDto);
+      }
+
+      /**
+       * Deleta um lancamento pelo seu respectivo id
+       * @param id
+       * @return ResponseEntity<Response<String>>
+       */
+      @DeleteMapping(value = "/{id}")
+      public ResponseEntity<Response<String>> remover(@PathVariable("id") Long id) {
+            log.info("Removendo lancamento pelo id: {}", id);
+            Response<String> response = new Response<String>();
+            Optional<Lancamento> lancamento = this.lancamentoService.buscarPorId(id);
+            if (!lancamento.isPresent()) {
+                 log.error("Erro ao remover lancamento com o id: {}", id);
+                 response.getErrors().add("Erro ao remover lancamento. Registro não encontrado para o id " + id);
+                 return ResponseEntity.badRequest().body(response);
+            }
+
+            this.lancamentoService.remover(id);
+            return ResponseEntity.ok(new Response<String>());
       }
 
       /**
