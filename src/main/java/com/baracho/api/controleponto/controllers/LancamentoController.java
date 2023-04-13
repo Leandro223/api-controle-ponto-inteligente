@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -151,6 +154,22 @@ public class LancamentoController {
             List<LancamentoDto> lancamentoDto = new ArrayList<LancamentoDto>();
             lancamentos.forEach(lancamento -> lancamentoDto.add(this.converterLancamentoParaLancamentoDto(lancamento)));
             return ResponseEntity.ok(lancamentoDto);
+      }
+
+      //	http://localhost:8080/lancamentos/por-data?inicio=2023-01-01&fim=2023-03-31
+      /**
+       * Retorna lancamento por data
+       * @param dataInicio
+       * @param dataFim
+       * @return ResponseEntity<List<LancamentoDto>>
+       */
+      @GetMapping(value = "/por-data")
+      public ResponseEntity<List<LancamentoDto>> listarPorData(@RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate dataInicio, @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
+            log.info("Buscando lancamento por data");
+            List<Lancamento> lancamentos = this.lancamentoService.buscarPorData(dataInicio, dataFim);
+            List<LancamentoDto> lancamentosDto = new ArrayList<>();
+            lancamentos.forEach(lancamento -> lancamentosDto.add(this.converterLancamentoParaLancamentoDto(lancamento)));
+            return ResponseEntity.ok(lancamentosDto);
       }
 
       /**
