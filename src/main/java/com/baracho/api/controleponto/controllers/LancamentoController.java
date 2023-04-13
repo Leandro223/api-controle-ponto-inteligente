@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -135,8 +136,12 @@ public class LancamentoController {
 
             if (!lancamento.isPresent()){
                   log.info("Lancamento não encontrado para o id: {}", id);
+                  if (response.getErrors() == null){ //adicionado vericacão para passar uma mensagem clara no servidor do erro invés de nullpointerException
+                        response.setErrors(new ArrayList<>());
+                  }
                   response.getErrors().add("lancamento não encontrado para o id: " + id);
-                  return ResponseEntity.badRequest().body(response);
+                  //return ResponseEntity.badRequest().body(response);
+                  return  new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
 
             response.setData(this.converterLancamentoParaLancamentoDto(lancamento.get()));
