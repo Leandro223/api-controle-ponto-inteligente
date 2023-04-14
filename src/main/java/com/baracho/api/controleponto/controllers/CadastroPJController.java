@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/cadastrar-pj")
@@ -52,6 +53,9 @@ public class CadastroPJController {
 
         if(result.hasErrors()) {
             log.error("Erro validando dados de cadastro PJ: {}", result.getAllErrors());
+            if (response.getErrors() == null){ //adicionado vericacão para passar uma mensagem clara no servidor do erro invés de nullpointerException
+                response.setErrors(new ArrayList<>());
+            }
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(response);
         }
