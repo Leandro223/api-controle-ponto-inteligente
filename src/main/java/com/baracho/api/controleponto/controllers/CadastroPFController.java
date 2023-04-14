@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -51,6 +52,9 @@ public class CadastroPFController {
 
         if( result.hasErrors()){
             log.error("Erro validando dados de cadastro de Pessoa Fisica: {}", result.getAllErrors());
+            if (response.getErrors() == null){ //adicionado vericacão para passar uma mensagem clara no servidor do erro invés de nullpointerException
+                response.setErrors(new ArrayList<>());
+            }
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(response);
         }
