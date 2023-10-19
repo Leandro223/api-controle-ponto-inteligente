@@ -12,7 +12,7 @@ Banco de Dados: A API presume que um banco de dados compatível esteja configura
 Instalação
 Clone este repositório:
 
-git clone https://github.com/seu-usuario/api-controle-ponto-inteligente.git
+git clone https://github.com/Leandro223/api-controle-ponto-inteligente.git
 Navegue até a pasta do projeto:
 
 cd api-controle-ponto-inteligente
